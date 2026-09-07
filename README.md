@@ -8,7 +8,7 @@
 
 It also orchestrates background proxy clients like **v2rayN**, automatically starting them when you connect, and safely cleaning up Windows System Proxy settings when you disconnect to ensure you never lose internet access.
 
-## ✨ Features
+## Features
 
 - **Multi-Adapter Bonding**: Visually select which network adapters to combine.
 - **IPv4 & IPv6 Support**: Choose between IPv4 only or IPv4/IPv6 dual-stack on a per-adapter basis.
@@ -17,7 +17,7 @@ It also orchestrates background proxy clients like **v2rayN**, automatically sta
 - **Ironclad Failsafe**: Gracefully closes proxy clients on exit and forcefully resets the Windows System Proxy via the Registry to prevent "no internet" bugs if the app crashes.
 - **Modern UI**: Sleek dark mode design.
 
-## 🚀 Usage
+## Usage
 
 1. Open **Dispatch Proxy Manager**.
 2. **Listen IP / Port**: Leave as default (`127.0.0.1:1080`) unless you have a custom setup.
@@ -26,7 +26,7 @@ It also orchestrates background proxy clients like **v2rayN**, automatically sta
 5. Click **Start Dispatch**. The app will spin up the local proxy, bind your adapters, and launch your proxy client.
 6. Click **Stop Dispatch** to safely shut down all processes and restore your standard internet settings.
 
-## 🛠️ How to Build from Source
+## How to Build from Source
 
 You don't need Visual Studio to compile this! You can build it using the C# compiler built directly into Windows.
 
