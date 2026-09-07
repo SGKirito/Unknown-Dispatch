@@ -25,14 +25,3 @@ It also orchestrates background proxy clients like **v2rayN**, automatically sta
 4. **Network Adapters**: Check the "Use" box next to the internet connections you want to combine.
 5. Click **Start Dispatch**. The app will spin up the local proxy, bind your adapters, and launch your proxy client.
 6. Click **Stop Dispatch** to safely shut down all processes and restore your standard internet settings.
-
-## How to Build from Source
-
-You don't need Visual Studio to compile this! You can build it using the C# compiler built directly into Windows.
-
-1. Ensure `DispatchGUI.cs` and `dispatch.exe` are in the same folder.
-2. Open Command Prompt (`cmd.exe`).
-3. Run the following command to compile the GUI and embed `dispatch.exe` inside it:
-
-```cmd
-C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /target:winexe /resource:dispatch.exe DispatchGUI.cs
