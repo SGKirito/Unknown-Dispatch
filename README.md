@@ -22,7 +22,7 @@ Grab the latest portable `DispatchProxyManager.exe` from the [Releases page](htt
 
 | Mode                                  | Who it's for                | What it does                                                                                                                                                        |
 | ------------------------------------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Built-in (System Proxy)** — default | Everyone                    | Runs a built-in HTTP proxy on `127.0.0.1:10809` that forwards into dispatch's SOCKS5, and configures the Windows System Proxy for you. No external software needed. |
+| **Built-in (System Proxy)** default | Everyone                    | Runs a built-in HTTP proxy on `127.0.0.1:10809` that forwards into dispatch's SOCKS5, and configures the Windows System Proxy for you. No external software needed. |
 | **External Client**                   | Users with their own client | Launches your preferred proxy client (e.g., `v2rayN.exe`) after dispatch starts, exactly like older versions. You manage that client's settings yourself.           |
 
 ### How the built-in mode works
@@ -45,7 +45,7 @@ Grab the latest portable `DispatchProxyManager.exe` from the [Releases page](htt
 
 ## Building from source
 
-No build script needed — one command with the .NET Framework C# compiler (bundled with Windows) produces the portable executable:
+No build script needed one command with the .NET Framework C# compiler (bundled with Windows) produces the portable executable:
 
 ```
 %WINDIR%\Microsoft.NET\Framework64\v4.0.30319\csc.exe /nologo /target:winexe /out:DispatchProxyManager.exe /r:System.Web.Extensions.dll /win32icon:logo.ico /resource:dispatch.exe,dispatch.exe DispatchProxyManager.cs
