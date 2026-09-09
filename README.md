@@ -8,7 +8,7 @@
 
 ## Download
 
-Grab the latest portable `DispatchProxyManager.exe` from the [Releases page]([https://github.com/SGKirito/Dispatch-Proxy-Manager/releases](https://github.com/SGKirito/Dispatch-Proxy-Manager/releases/tag/v0.2.0)).
+Grab the latest portable `DispatchProxyManager.exe` from the [Releases page](https://github.com/SGKirito/Dispatch-Proxy-Manager/releases/tag/v0.2.0).
 
 ## Features
 
