@@ -14,8 +14,6 @@ name = "dispatch"
 
 [profile.release]
 debug = true
-# Keep symbol names for readable panic backtraces, but drop the heavyweight
-# DWARF debug info so the shipped executable stays a reasonable size.
 strip = "debuginfo"
 
 [profile.dist]

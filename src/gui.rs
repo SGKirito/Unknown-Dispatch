@@ -636,15 +636,8 @@ impl eframe::App for DispatchGui {
                 let config = wintray::TrayConfig {
                     exit_flag: Arc::clone(&self.exit_flag),
                     on_exit: Arc::new(move || {
-                        // The egui event loop cannot be woken up while the
-                        // window is hidden (Windows does not deliver WM_PAINT
-                        // to hidden windows), so "Exit Completely" performs
-                        // the shutdown right here instead of waiting for a
-                        // GUI frame to observe the exit flag.
                         tracing::info!("[~] Exiting...");
-                        // Cancel any pending system-proxy watch thread.
                         session.fetch_add(1, Ordering::SeqCst);
-                        // Restore the Windows system proxy if we enabled it.
                         if sysproxy_active.swap(false, Ordering::SeqCst) {
                             if sysproxy::clear_system_proxy() {
                                 tracing::info!("[+] System Proxy reset. Internet restored.");
