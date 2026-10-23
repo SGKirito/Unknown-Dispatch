@@ -1,0 +1,67 @@
+[package]
+name = "unknown-dispatch"
+version = "0.3.0"
+authors = ["Alexandre Kirszenberg <alex@kirszenberg.com>"]
+edition = "2021"
+description = "A SOCKS proxy that balances traffic between network interfaces, with a GUI, HTTP proxy, system-wide proxy and system tray."
+license = "MIT OR Apache-2.0"
+keywords = ["SOCKS", "proxy", "dispatch", "network", "interface"]
+repository = "https://github.com/alexkirsz/dispatch"
+
+[[bin]]
+path = "src/main.rs"
+name = "dispatch"
+
+[profile.release]
+debug = true
+
+[profile.dist]
+inherits = "release"
+lto = "thin"
+
+[dependencies]
+socksv5 = { version = "0.3", features = ["tokio"], default-features = false }
+tracing = "0.1"
+tracing-futures = "0.2"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+tracing-error = "0.2"
+tracing-appender = "0.2"
+eyre = "0.6"
+color-eyre = { version = "0.6", features = ["issue-url"] }
+tokio = { version = "1", features = [
+  "macros",
+  "net",
+  "rt-multi-thread",
+  "io-util",
+  "time",
+] }
+eframe = "0.27"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+clap = { version = "4", features = ["derive"] }
+network-interface = "2"
+owo-colors = "4"
+tokio-util = { version = "0.7", features = ["rt"] }
+async-trait = "0.1"
+directories = "6"
+percent-encoding = "2"
+term-table = "1"
+sysinfo = "0.34"
+
+[build-dependencies]
+winresource = "0.1"
+
+[workspace.metadata.dist]
+cargo-dist-version = "0.0.6"
+rust-toolchain-version = "1.77.0"
+ci = ["github"]
+installers = ["shell", "powershell"]
+targets = [
+  "x86_64-unknown-linux-gnu",
+  "x86_64-apple-darwin",
+  "x86_64-pc-windows-msvc",
+  "aarch64-apple-darwin",
+]
+windows-archive = ".tar.gz"
+unix-archive = ".tar.gz"
+npm-scope = "@alexkirsz"
