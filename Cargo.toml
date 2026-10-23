@@ -1,6 +1,6 @@
 [package]
 name = "unknown-dispatch"
-version = "0.3.0"
+version = "0.3.1"
 authors = ["Alexandre Kirszenberg <alex@kirszenberg.com>"]
 edition = "2021"
 description = "A SOCKS proxy that balances traffic between network interfaces, with a GUI, HTTP proxy, system-wide proxy and system tray."
@@ -14,6 +14,9 @@ name = "dispatch"
 
 [profile.release]
 debug = true
+# Keep symbol names for readable panic backtraces, but drop the heavyweight
+# DWARF debug info so the shipped executable stays a reasonable size.
+strip = "debuginfo"
 
 [profile.dist]
 inherits = "release"

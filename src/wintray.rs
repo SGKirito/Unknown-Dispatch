@@ -8,6 +8,7 @@ use std::sync::{
 #[allow(dead_code)]
 pub struct TrayConfig {
     pub exit_flag: Arc<AtomicBool>,
+    pub on_exit: Arc<dyn Fn() + Send + Sync>,
     pub on_wake: Arc<dyn Fn() + Send + Sync>,
     pub tooltip: String,
 }
@@ -139,6 +140,7 @@ mod imp {
     static TRAY_HWND: AtomicIsize = AtomicIsize::new(0);
     static INSTALLED: AtomicBool = AtomicBool::new(false);
     static EXIT_FLAG: OnceLock<Arc<AtomicBool>> = OnceLock::new();
+    static ON_EXIT: OnceLock<Arc<dyn Fn() + Send + Sync>> = OnceLock::new();
     static ON_WAKE: OnceLock<Arc<dyn Fn() + Send + Sync>> = OnceLock::new();
 
     pub fn install(hwnd: *mut core::ffi::c_void, config: TrayConfig) -> bool {
@@ -159,6 +161,7 @@ mod imp {
             OLD_WNDPROC.store(prev, Ordering::SeqCst);
 
             EXIT_FLAG.get_or_init(|| Arc::clone(&config.exit_flag));
+            ON_EXIT.get_or_init(|| Arc::clone(&config.on_exit));
             ON_WAKE.get_or_init(|| Arc::clone(&config.on_wake));
 
             let mut nid: NOTIFYICONDATAW = core::mem::zeroed();
@@ -262,6 +265,10 @@ mod imp {
             MENU_EXIT => {
                 if let Some(flag) = EXIT_FLAG.get() {
                     flag.store(true, Ordering::SeqCst);
+                }
+
+                if let Some(exit) = ON_EXIT.get() {
+                    exit();
                 }
                 if let Some(wake) = ON_WAKE.get() {
                     wake();

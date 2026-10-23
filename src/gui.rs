@@ -22,6 +22,7 @@ use crate::{
     icon,
     net::get_valid_addresses,
     server::{spawn_server, ServerHandle, PHASE_FAILED, PHASE_RUNNING, PHASE_STOPPED},
+    single_instance,
     sysproxy, wintray,
 };
 
@@ -152,6 +153,17 @@ pub struct DispatchGui {
 }
 
 pub fn run(verbose: bool) -> Result<()> {
+    // If another instance is already running (its window may merely be
+    // hidden to the system tray), activate it and exit without creating a
+    // second window, tray icon or proxy server.
+    let _instance_guard = match single_instance::acquire(APP_TITLE) {
+        single_instance::Acquisition::Acquired(guard) => Some(guard),
+        single_instance::Acquisition::AlreadyRunning => {
+            tracing::info!("Another instance is already running; brought its window to the front instead.");
+            return Ok(());
+        }
+    };
+
     let runtime = tokio::runtime::Runtime::new()?;
     let rt_handle = runtime.handle().clone();
 
@@ -619,8 +631,32 @@ impl eframe::App for DispatchGui {
         if !self.tray_installed {
             if let Some(hwnd) = native_hwnd(ctx) {
                 let wake_ctx = ctx.clone();
+                let sysproxy_active = Arc::clone(&self.sysproxy_active);
+                let session = Arc::clone(&self.session);
                 let config = wintray::TrayConfig {
                     exit_flag: Arc::clone(&self.exit_flag),
+                    on_exit: Arc::new(move || {
+                        // The egui event loop cannot be woken up while the
+                        // window is hidden (Windows does not deliver WM_PAINT
+                        // to hidden windows), so "Exit Completely" performs
+                        // the shutdown right here instead of waiting for a
+                        // GUI frame to observe the exit flag.
+                        tracing::info!("[~] Exiting...");
+                        // Cancel any pending system-proxy watch thread.
+                        session.fetch_add(1, Ordering::SeqCst);
+                        // Restore the Windows system proxy if we enabled it.
+                        if sysproxy_active.swap(false, Ordering::SeqCst) {
+                            if sysproxy::clear_system_proxy() {
+                                tracing::info!("[+] System Proxy reset. Internet restored.");
+                            } else {
+                                tracing::error!(
+                                    "[-] Failed to clear the system proxy! If internet is broken: Windows Settings > Network & Internet > Proxy > turn 'Use a proxy server' OFF."
+                                );
+                            }
+                        }
+                        wintray::remove();
+                        std::process::exit(0);
+                    }),
                     on_wake: Arc::new(move || wake_ctx.request_repaint()),
                     tooltip: APP_TITLE.to_string(),
                 };

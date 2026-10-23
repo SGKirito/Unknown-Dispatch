@@ -15,6 +15,7 @@ mod icon;
 mod list;
 mod net;
 mod server;
+mod single_instance;
 mod socks;
 mod sysproxy;
 mod wintray;
